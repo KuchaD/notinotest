@@ -1,14 +1,11 @@
 using System;
 using System.IO;
-using System.IO.Pipelines;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using NotinoTest.api.Convertor;
 using NotinoTest.Infrastructure.Error;
 using NotinoTest.Infrastructure.Serializer;
 using JsonSerializer = NotinoTest.Infrastructure.Serializer.JsonSerializer;
@@ -48,20 +45,6 @@ public class WebClient
         };
     }
 
-    public async Task CallAsync(Func<HttpClient, CancellationToken, Task<HttpResponseMessage>> func,
-        CancellationToken cancellationToken)
-    {
-        var result = await func(_client, cancellationToken);
-        var body = await result.Content.ReadAsStringAsync(cancellationToken);
-
-        if (!result.IsSuccessStatusCode)
-        {
-            throw new HttpRequestException(
-                $"ReasonPhrase : {result.ReasonPhrase}; Body: {body}", null,
-                result.StatusCode);
-        }
-    }
-
     public async Task<OneOf<T?, ErrorType>> CallAsync<T>(
         Func<HttpClient, CancellationToken, Task<HttpResponseMessage>> func, CancellationToken cancellationToken)
     {
@@ -96,6 +79,6 @@ public class WebClient
 
         await contentStream.CopyToAsync(stream);
         stream.Seek(0, SeekOrigin.Begin);
-        return (stream, result.Content.Headers.ContentDisposition!.FileName);
+        return ( stream, result.Content.Headers.ContentDisposition!.FileName );
     }
 }

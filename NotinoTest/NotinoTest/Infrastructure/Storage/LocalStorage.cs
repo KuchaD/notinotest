@@ -1,8 +1,6 @@
-using System.Runtime.InteropServices;
-
 namespace NotinoTest.Infrastructure.Error;
 
-public class LocalStorage :  IStorage
+public class LocalStorage : IStorage
 {
     public bool Exist(string path)
     {

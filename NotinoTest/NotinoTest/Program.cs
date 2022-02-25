@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Microsoft.AspNetCore.Http.Features;
 using NotinoTest.api.Convertor;
 using NotinoTest.Infrastructure.Email;
 using NotinoTest.Infrastructure.Error;
@@ -13,7 +12,7 @@ builder.Services.AddOptions<JsonSerializerOptions>().Configure(NotinoTest.Infras
 builder.Services.AddControllers().AddJsonOptions(options => NotinoTest.Infrastructure.Serializer.JsonSerializer.SetupJsonOptions(options.JsonSerializerOptions));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddTransient<IEmailClient, EmailClient>();
 builder.Services.Configure<EmailSettingOptions>(builder.Configuration.GetSection(EmailSettingOptionsName));
 
 builder.Services.AddControllers(options =>
@@ -28,7 +27,6 @@ builder.Services.AddConvertor();
 builder.Services.AddScoped<ISerializer, NotinoTest.Infrastructure.Serializer.JsonSerializer>();
 
 var app = builder.Build();
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

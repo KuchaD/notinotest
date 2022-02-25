@@ -10,10 +10,10 @@ public static class EndpointBaseAsyncExtenstion
     {
         endpoint.HttpContext.Items.Add("Error", error);
     }
-    
+
     public static void AddError(this EndpointBase endpoint, ErrorType error, HttpStatusCode code)
     {
-        error.ErrorCode = (int)code ;
+        error.ErrorCode = (int)code;
         endpoint.HttpContext.Items.Add("Error", error);
     }
 

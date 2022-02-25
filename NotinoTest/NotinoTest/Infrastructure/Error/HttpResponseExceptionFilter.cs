@@ -9,7 +9,7 @@ public class HttpResponseExceptionFilter : IAsyncExceptionFilter
     public Task OnExceptionAsync(ExceptionContext context)
     {
         var logger = (ILogger<HttpResponseExceptionFilter>)context.HttpContext.RequestServices.GetService(typeof(ILogger<HttpResponseExceptionFilter>))!;
-        logger.LogError( "UnhandleExpetion ErrorCode={@errorcode} Exeption={@Exeption}",(int)HttpStatusCode.InternalServerError, context.Exception );
+        logger.LogError("UnhandleExpetion ErrorCode={@errorcode} Exeption={@Exeption}", (int)HttpStatusCode.InternalServerError, context.Exception);
         context.Result = CreateExceptionResponse(context.Exception);
         context.ExceptionHandled = true;
         return Task.CompletedTask;
@@ -23,7 +23,7 @@ public class HttpResponseExceptionFilter : IAsyncExceptionFilter
             ErrorMessage = exception.Message,
             ErrorCode = (int)HttpStatusCode.InternalServerError
         };
-            
+
         return new ObjectResult(errorResponse) { StatusCode = errorResponse.ErrorCode };
     }
 }

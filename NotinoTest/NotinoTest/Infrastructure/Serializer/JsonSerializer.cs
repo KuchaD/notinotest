@@ -25,11 +25,6 @@ public class JsonSerializer : ISerializer
         options = jsonOptionsSnapshot.Value;
     }
 
-    public object? Deserialize(string message, Type messageType)
-    {
-        return System.Text.Json.JsonSerializer.Deserialize(message, messageType, options);
-    }
-
     public T? Deserialize<T>(string message)
     {
         return System.Text.Json.JsonSerializer.Deserialize<T>(message, options);
@@ -39,4 +34,4 @@ public class JsonSerializer : ISerializer
     {
         return System.Text.Json.JsonSerializer.Serialize(data, options);
     }
-}   
+}

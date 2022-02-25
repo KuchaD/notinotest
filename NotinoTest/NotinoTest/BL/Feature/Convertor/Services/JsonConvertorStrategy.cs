@@ -1,14 +1,14 @@
-using System.ComponentModel.Design;
 using NotinoTest.api.Convertor.Enums;
+using NotinoTest.api.Convertor.Services;
 using NotinoTest.Infrastructure.Serializer;
 
-namespace NotinoTest.api.Convertor.Services;
+namespace NotinoTest.BL.Feature.Convertor.Services;
 
 public class JsonConvertorStrategy : IConvertorStrategy
 {
     private readonly ISerializer _serializer;
     public DocumentTypeEnums ProcessType => DocumentTypeEnums.Json;
-    
+
     public JsonConvertorStrategy(ISerializer serializer)
     {
         _serializer = serializer;

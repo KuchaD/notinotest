@@ -2,8 +2,8 @@ using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using NotinoTest.api.Convertor;
 using NotinoTest.api.Convertor.Response;
+using NotinoTest.BL.Feature.Convertor.Request;
 using NotinoTest.Infrastructure;
-using NotinoTest.Infrastructure.Error;
 
 namespace NotinoTest.BL.Feature.Convertor.Handler;
 
@@ -12,11 +12,11 @@ public class ConvertRequestHandler : EndpointBaseAsync
     .WithRequest<ConvertRequest>
     .WithActionResult<ResponseContent>
 {
-    private readonly IConvertorService _utils;
+    private readonly IConvertorService _convertorService;
 
-    public ConvertRequestHandler(ILogger<ConvertRequestHandler> logger, IConvertorService utils)
+    public ConvertRequestHandler(IConvertorService convertorService)
     {
-        _utils = utils;
+        _convertorService = convertorService;
     }
 
     [HttpPost("text")]
@@ -24,7 +24,7 @@ public class ConvertRequestHandler : EndpointBaseAsync
     public override async Task<ActionResult<ResponseContent>> HandleAsync(ConvertRequest request,
         CancellationToken cancellationToken)
     {
-        return _utils.Convert(request.Content, request.To).Match(
+        return _convertorService.Convert(request.Content, request.To).Match(
             response => new ResponseContent(response),
             error =>
             {

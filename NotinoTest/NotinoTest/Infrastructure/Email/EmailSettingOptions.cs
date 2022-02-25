@@ -6,5 +6,4 @@ public class EmailSettingOptions
     public int Port { get; set; } = 25;
     public string UserName { get; set; } = "TestUser";
     public string Password { get; set; } = "Heslo";
-
 }

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using NotinoTest.api.Convertor.Enums;
-
-namespace NotinoTest.BL.Feature.Convertor.Handler;
+namespace NotinoTest.BL.Feature.Convertor.Request;
 
 public class ConvertFileAndSendToEmailRequest
 {

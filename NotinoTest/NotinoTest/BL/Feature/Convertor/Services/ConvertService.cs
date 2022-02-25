@@ -1,11 +1,10 @@
-using System.Text;
+using NotinoTest.api.Convertor;
 using NotinoTest.api.Convertor.Enums;
 using NotinoTest.api.Convertor.Models;
 using NotinoTest.api.Convertor.Services;
 using NotinoTest.Infrastructure.Error;
 using OneOf;
-
-namespace NotinoTest.api.Convertor;
+namespace NotinoTest.BL.Feature.Convertor.Services;
 
 public class ConvertService : IConvertorService
 {
@@ -21,14 +20,14 @@ public class ConvertService : IConvertorService
     private (DocumentTypeEnums, bool) TryCheckFileType(string content)
     {
         if (content.IsJson())
-            return (DocumentTypeEnums.Json, true);
+            return ( DocumentTypeEnums.Json, true );
 
         if (content.IsXml())
-            return (DocumentTypeEnums.Xml, true);
+            return ( DocumentTypeEnums.Xml, true );
 
-        return (default, false);
+        return ( default, false );
     }
-    
+
     public OneOf<string, ErrorType> Convert(string content, DocumentTypeEnums convertTo)
     {
         var (type, success) = TryCheckFileType(content);

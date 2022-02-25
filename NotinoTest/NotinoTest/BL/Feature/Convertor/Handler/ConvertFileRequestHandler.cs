@@ -2,9 +2,8 @@ using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using NotinoTest.api.Convertor;
 using NotinoTest.api.Convertor.Response;
+using NotinoTest.BL.Feature.Convertor.Request;
 using NotinoTest.Infrastructure;
-using NotinoTest.Infrastructure.Error;
-using NotinoTest.Infrastructure.Serializer;
 
 namespace NotinoTest.BL.Feature.Convertor.Handler;
 
@@ -13,13 +12,11 @@ public class ConvertFileRequestHandler : EndpointBaseAsync
     .WithRequest<ConvertFileRequest>
     .WithResult<FileResult>
 {
-    private readonly IConvertorService _utils;
-    private readonly ISerializer _storage;
+    private readonly IConvertorService _convertorService;
 
-    public ConvertFileRequestHandler(IConvertorService utils, ISerializer storage)
+    public ConvertFileRequestHandler(IConvertorService convertorService)
     {
-        _utils = utils;
-        _storage = storage;
+        _convertorService = convertorService;
     }
 
     [HttpPost("file"), DisableRequestSizeLimit]
@@ -38,8 +35,8 @@ public class ConvertFileRequestHandler : EndpointBaseAsync
         await using var fileStream = request.Data.OpenReadStream();
         using var streamReader = new StreamReader(fileStream);
         var resultString = await streamReader.ReadToEndAsync();
-        
-        return await _utils.Convert(resultString, request.ConvertTo).Match(async response =>
+
+        return await _convertorService.Convert(resultString, request.ConvertTo).Match(async response =>
             {
                 var memoryStream = new MemoryStream();
                 await using var sw = new StreamWriter(memoryStream);

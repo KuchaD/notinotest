@@ -1,10 +1,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.Options;
-using Moq;
-using NotinoTest.api.Convertor.Enums;
 using NotinoTest.api.Convertor.Models;
-using NotinoTest.api.Convertor.Services;
-using NotinoTest.Infrastructure.Serializer;
+using NotinoTest.BL.Feature.Convertor.Services;
 using Xunit;
 using JsonSerializer = NotinoTest.Infrastructure.Serializer.JsonSerializer;
 
@@ -30,7 +27,7 @@ public class JsonConvertorStrategyTest
         var result = _strategy.Serialize(data);
         Assert.Equal("{\"title\":\"TestTitle\",\"text\":\"testText\"}", result);
     }
-    
+
     [Fact]
     public void SerializeDocument_successConvert()
     {

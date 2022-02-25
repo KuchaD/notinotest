@@ -1,11 +1,10 @@
 using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using NotinoTest.api.Convertor;
-using NotinoTest.api.Convertor.Enums;
 using NotinoTest.api.Convertor.Response;
+using NotinoTest.BL.Feature.Convertor.Request;
 using NotinoTest.Infrastructure;
 using NotinoTest.Infrastructure.Email;
-using NotinoTest.Infrastructure.Serializer;
 
 namespace NotinoTest.BL.Feature.Convertor.Handler;
 
@@ -14,16 +13,13 @@ public class ConvertFileAndSendToEmailRequestHandle : EndpointBaseAsync
     .WithRequest<ConvertFileAndSendToEmailRequest>
     .WithActionResult
 {
-    private readonly IConvertorService _utils;
-    private readonly ISerializer _storage;
-    private readonly IEmailSender _emailSender;
+    private readonly IConvertorService _convertorService;
+    private readonly IEmailClient _emailClient;
 
-    public ConvertFileAndSendToEmailRequestHandle(IConvertorService utils, ISerializer storage,
-        IEmailSender emailSender)
+    public ConvertFileAndSendToEmailRequestHandle(IConvertorService convertorService, IEmailClient emailClient)
     {
-        _utils = utils;
-        _storage = storage;
-        _emailSender = emailSender;
+        _convertorService = convertorService;
+        _emailClient = emailClient;
     }
 
     [HttpPost("email/file"), DisableRequestSizeLimit]
@@ -43,7 +39,7 @@ public class ConvertFileAndSendToEmailRequestHandle : EndpointBaseAsync
         using var streamReader = new StreamReader(fileStream);
         var resultString = await streamReader.ReadToEndAsync();
 
-        return await _utils.Convert(resultString, request.ConvertTo).Match<Task<ActionResult>>(
+        return await _convertorService.Convert(resultString, request.ConvertTo).Match<Task<ActionResult>>(
             async response =>
             {
                 await SendEmailAsync(request, response);
@@ -62,7 +58,7 @@ public class ConvertFileAndSendToEmailRequestHandle : EndpointBaseAsync
         await using var sw = new StreamWriter(memoryStream);
         await sw.WriteAsync(response);
         await sw.FlushAsync();
-                
+
         var email = new EmailBuilder()
             .FromDefault()
             .To(request.Email)
@@ -70,7 +66,7 @@ public class ConvertFileAndSendToEmailRequestHandle : EndpointBaseAsync
             .AddAttachment(ConvertorHelper.FileNameStrategy[request.ConvertTo]("resultFile"), memoryStream)
             .Build();
 
-        var result = _emailSender.TrySend(email);
+        var result = _emailClient.TrySend(email);
         if (result is not null)
             this.AddError(result);
     }

@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using NotinoTest.api.Convertor.Enums;
 
-namespace NotinoTest.api.Convertor.Response;
+namespace NotinoTest.BL.Feature.Convertor.Request;
 
 public class ConvertRequest
 {
